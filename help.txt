@@ -1,0 +1,5 @@
+  git add README.md 
+  git commit -m "First upload"
+  git remote add origin https://github.com/dcialdella/week4_Peer_Graded.git
+  git push -u origin master
+
