@@ -16,3 +16,10 @@ The purpose of this project is to demonstrate your ability to collect, work with
     The README that explains the analysis files is clear and understandable.
     The work submitted for this project is the work of the student who submitted it.
 
+
+## Links about the info
+http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+
+http://archive.ics.uci.edu/ml/machine-learning-databases/00240/
+
+
