@@ -6,6 +6,13 @@
 # dac 2016-07-01
 #
 
+
+# ########################################################
+#
+# Settings
+#
+# ########################################################
+
 library(reshape2)
 library(plyr)
 library(htmltools)
@@ -17,9 +24,14 @@ library(lubridate)
 set_config(use_proxy(url='http://192.168.10.145',8080))
 
 
+
+# ########################################################
+#
 # 1. Download the dataset if it does not already exist in the working directory
 # check local file, if I deleted it, download it again.
 #
+# ########################################################
+
 start_file <- "downloaded_data.zip"
 if (   !file.exists( start_file ))
   {
@@ -33,9 +45,7 @@ if (   !file.exists( start_file ))
   
     # Downloaded Manually and stored locally by hand.
   
-  
-  
-  
+
     # Unzip file in a local folder
     # Linux Shell - unzip downloaded_data.zip
 
@@ -75,3 +85,14 @@ if (   !file.exists( start_file ))
 
 
 
+# ########################################################
+#
+# 2. Load the activity and feature info
+#
+# ########################################################
+
+activities <- read.table("UCI HAR Dataset/activity_labels.txt")
+actnro     <- nrow(activities)
+
+features <- read.table("UCI HAR Dataset/features.txt")
+featnro  <- nrow(features)
