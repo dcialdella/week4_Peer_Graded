@@ -5,7 +5,8 @@
 # Run analysis.R
 # dac 2016-07-01
 #
-# v 6
+# V 7.0
+#
 #
 
 
@@ -35,11 +36,14 @@ set_config(use_proxy(url='http://192.168.10.145',8080))
 #
 # ########################################################
 
+#
+# file 59.7 megas download
+#
 start_file <- "downloaded_data.zip"
 if (   !file.exists( start_file ))
 {
   
-  # Download using HTTP 
+  # Download using HTTP - issues with the proxy. recheck it !!!!
   download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", 
                 start_file, method = "curl" )
   # % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -49,6 +53,7 @@ if (   !file.exists( start_file ))
   # Downloaded Manually and stored locally by hand.
   
   
+
   # Unzip file in a local folder
   # Linux Shell - unzip downloaded_data.zip
   
@@ -95,10 +100,10 @@ if (   !file.exists( start_file ))
 # ########################################################
 
 actividades <- read.table("UCI HAR Dataset/activity_labels.txt")
-act_nro    <- nrow(actividades)
+act_nro     <- nrow(actividades)
 
-caracter <- read.table("UCI HAR Dataset/features.txt")
-feat_nro <- nrow(caracter)
+caracter    <- read.table("UCI HAR Dataset/features.txt")
+feat_nro    <- nrow(caracter)
 
 
 # V1                V2
@@ -110,7 +115,7 @@ feat_nro <- nrow(caracter)
 # 6  6  tBodyAcc-std()-Z
 
 
-# VUDU magic here, 
+# VUDU magic here, identify chars and use the 2 column
 mean_and_std_carac <- grep("-(mean|std)\\(\\)", caracter[, 2])
 # Obtain list of V1 identifying MEAN or STD text of field
 # [1]   1   2   3   4   5   6  41  42  43  44  45  46  81  82  83  84  85  86 121 122 123 124 125 126 161 162 163 164 165 166 201
@@ -121,15 +126,15 @@ mean_and_std_carac <- grep("-(mean|std)\\(\\)", caracter[, 2])
 
 titulo_train     <- read.table("UCI HAR Dataset/train/subject_train.txt")
 titulo_train_nro <- nrow( titulo_train )
-# will use V1 as joining fields
+# will use V1 as joining field
 # 7352
 
-titulo_test     <- read.table("UCI HAR Dataset/test/subject_test.txt")
-titulo_test_nro <- nrow( titulo_test )
-# will use V1 as joining fields
+titulo_test      <- read.table("UCI HAR Dataset/test/subject_test.txt")
+titulo_test_nro  <- nrow( titulo_test )
+# will use V1 as joining field
 # 2947
 
-titulo_data <- rbind(titulo_train, titulo_test)
+titulo_data     <- rbind(titulo_train, titulo_test)
 # 10299 records
 
 
@@ -164,7 +169,7 @@ y_test  <- read.table("UCI HAR Dataset/test/y_test.txt")     # Review "y" instea
 
 # merge or "BIND", data from training with data from test, x with x
 # y with y
-x_data <- rbind(x_train, x_test)    # 10299 records OK
+x_data <- rbind(x_train, x_test)    # 10299 records OK 
 y_data <- rbind(y_train, y_test)    # 10299 records OK
 # data merge validates
 
@@ -188,6 +193,7 @@ names(titulo_data) <- "subject"
 
 # All in the same place, x_data, y_data and subjects.
 toda_la_data <- cbind(x_data, y_data, titulo_data)
+# this object could be used for other tasks in the future, it's the BIG all in one.
 
 
 # ########################################################
