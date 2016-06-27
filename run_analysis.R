@@ -4,6 +4,8 @@
 # 
 # Run analysis.R
 # dac 2016-07-01
+# 
+# V 5
 #
 
 
@@ -35,21 +37,21 @@ set_config(use_proxy(url='http://192.168.10.145',8080))
 
 start_file <- "downloaded_data.zip"
 if (   !file.exists( start_file ))
-{
+  {
+
+    # Download using HTTP 
+    download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", 
+                  start_file, method = "curl" )
+    # % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+    # Dload  Upload   Total   Spent    Left  Speed
+    # 0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (5) Could not resolve proxy: 192.168.10.1.45
   
-  # Download using HTTP 
-  download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", 
-                start_file, method = "curl" )
-  # % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-  # Dload  Upload   Total   Spent    Left  Speed
-  # 0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (5) Could not resolve proxy: 192.168.10.1.45
+    # Downloaded Manually and stored locally by hand.
   
-  # Downloaded Manually and stored locally by hand.
-  
-  
-  # Unzip file in a local folder
-  # Linux Shell - unzip downloaded_data.zip
-  
+
+    # Unzip file in a local folder
+    # Linux Shell - unzip downloaded_data.zip
+
   #  Archive:  downloaded_data.zip
   #  replace UCI HAR Dataset/activity_labels.txt? [y]es, [n]o, [A]ll, [N]one, [r]ename: A
   #  inflating: UCI HAR Dataset/activity_labels.txt  
@@ -81,7 +83,7 @@ if (   !file.exists( start_file ))
   #  inflating: UCI HAR Dataset/train/X_train.txt  
   #  inflating: UCI HAR Dataset/train/y_train.txt 
   
-}
+      }
 
 
 
@@ -91,7 +93,7 @@ if (   !file.exists( start_file ))
 # 2. Load the activity and feature info, estimate number of records to validate results later.
 #
 # ########################################################
-
+  
 actividades <- read.table("UCI HAR Dataset/activity_labels.txt")
 act_nro    <- nrow(actividades)
 
@@ -109,7 +111,7 @@ feat_nro <- nrow(caracter)
 
 
 # VUDU magic here, 
-mean_and_std_carac <- grep("-(mean|std)\\(\\)", caracter[, 2])
+mean_y_std_textos <- grep("-(mean|std)\\(\\)", caracter[, 2])
 # Obtain list of V1 identifying MEAN or STD text of field
 # [1]   1   2   3   4   5   6  41  42  43  44  45  46  81  82  83  84  85  86 121 122 123 124 125 126 161 162 163 164 165 166 201
 # [32] 202 214 215 227 228 240 241 253 254 266 267 268 269 270 271 345 346 347 348 349 350 424 425 426 427 428 429 503 504 516 517
@@ -168,12 +170,12 @@ y_data <- rbind(y_train, y_test)    # 10299 records OK
 
 
 # reduce data using the Number of column needed with MEAN or STD
-x_data <- x_data[, mean_and_std_carac]
+x_data <- x_data[, mean_y_std_textos]
 
 
 # migrate VXXX to a detailed column name
 # really cryptic to understand it.....
-names(x_data) <- caracter[mean_and_std_carac, 2]
+names(x_data) <- caracter[mean_y_std_textos, 2]
 
 # update COLUMN with correct activity names
 y_data[, 1] <- actividades[y_data[, 1], 2]
@@ -196,12 +198,13 @@ promedio_data <- ddply(toda_la_data, .(subject, activity), function(x) colMeans(
 
 # ########################################################
 #
-# Building a new file with results, tidy.txt ? not the best name... but the petition
+# Building a new file with results
 #
 # ########################################################
 
+
 # the FINAL listing, imposible to understand
-write.table(promedio_data, "tidy.txt", row.name=FALSE)
+write.table(promedio_data, "averages_data.txt", row.name=FALSE)
 
 # sample
 # 30 "WALKING_UPSTAIRS" 0.271415642261538 -0.0253311698786154 -0.124697493775385 -0.350504475230769 
