@@ -5,26 +5,62 @@
 
 The script `run_analysis.R` will perform the 5 steps definited.
 
-* First, all the similar data is merged using the `rbind()` function. By similar, we address those files 
-having the same number of columns and referring to the same entities.
-* Then, only those columns with the mean and standard deviation measures are taken from the whole dataset. 
-After extracting these columns, they are given the correct names, taken from `features.txt`.
-* As activity data is addressed with values 1:6, we take the activity names and IDs from `activity_labels.txt` 
-and they are substituted in the dataset.
-* On the whole dataset, those columns with vague column names are corrected.
-* Finally, we generate a new dataset with all the average measures for each subject and activity type 
-(30 subjects * 6 activities = 180 rows). The output file is called `averages_data.txt`, and uploaded to this repository.
+Lines 18 - 30
+prepare Libraries and PROXY to download file from internet
+
+Lines 40 - 93
+download file if don't exists and un-compress to create folder with data inside
+
+100 - 108
+obtain activities and subjects, needed for processing
+
+119 big part, identify numbers with chars "MEAN" or "STD", isolate IDs needed for other process
+
+127 - 137
+obtain subjects from TEST and TRAINING data, bind both to a big object (titulo_data)
+
+150 - 162
+load data from tables TRAIN and TESTING, parts X and Y (take care of "y" and NOT "Y"
+
+170 - 178
+Join/Bind data from X, and Y isolated each one
+
+183 another big part (real strange)
+review the 2nd columnd in caracteristics and use it as Field name
+
+188 - 192
+prepare field name to the joining (future)
+
+195 Join all and make a big object, may be needed for other tasks
+
+208 DDPLY big part, two hours to identify this solution
+how use col names, calculate mean, different V1/subjects
+
+215 Write tidy.txt file
+generate a local file, no names, just info.
+
 
 # Variables
+actividades  - name of activities (6)
+caracter     - name of subject/sensor? activities? 561
+promedio_data - data ordered, mean. 180
+titulo_data   - subjects of data 10299 (all in one)
+titulo_test   - subjects of testing 2947
+titulo_train  - subjects of training data 7352
+toda_la_data  - all in one - big - 10299
+x_data        - data for x + y - 10299
+x_test        - data x testing only 2947
+x-train       - data for training x 7352
+y_data        - data for y+ x 10299
+y_test        - data for testing y only - 2947
+y_train       - data for training y only - 7352
+act_nro       - number of activities - 6
+feat_nro      - number of features (sensors) 561
+mean_and_std_caracteristicas - ID of fields needed (average and deviation standard)
+start_file        - file to download from internet
+titulo_test_nro   - number of records in testing - 2947
+titulo_train_nro  - number of records in training 7352
 
-* `x_train`, `y_train`, `x_test`, `y_test`, `subject_train` and `subject_test` contain the data from 
-the downloaded files.
-* `x_data`, `y_data` and `subject_data` merge the previous datasets to further analysis.
-* `features` contains the correct names for the `x_data` dataset, which are applied to the column names 
-stored in `mean_and_std_features`, a numeric vector used to extract the desired data.
-* A similar approach is taken with activity names through the `activities` variable.
-* `all_data` merges `x_data`, `y_data` and `subject_data` in a big dataset.
-* Finally, `averages_data` contains the relevant averages which will be later stored in a `.txt` file. 
-`ddply()` from the plyr package is used to apply `colMeans()` and ease the development.
+needed for comparatives, tests.
 
 
